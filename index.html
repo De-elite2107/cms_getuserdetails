@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biodata Form</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f3f4f6 0%, #e2e8f0 100%);
+            background-image: url(./hero.jpeg);
+            background-repeat: repeat;
+            background-attachment: fixed;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            margin: 0;
+        }
+        .form-container {
+            height: fit-content;
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            transition: transform 0.2s;
+        }
+        .form-container:hover {
+            transform: scale(1.02);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus,
+        textarea:focus {
+            border-color: #007bff; /* Blue focus color */
+            outline: none; /* Remove default outline */
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff; /* Bootstrap primary color */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+            transform: translateY(-2px); /* Lift effect */
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Biodata Form</h2>
+    <form id="biodataForm">
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required placeholder="Enter your username" maxlength="150">
+        </div>
+        <div class="form-group">
+            <label for="first_name">First name</label>
+            <input type="text" id="first_name" name="first_name" required placeholder="Enter your first name" maxlength="150">
+        </div>
+        <div class="form-group">
+            <label for="last_name">Last name</label>
+            <input type="text" id="last_name" name="last_name" required placeholder="Enter your last name" maxlength="150">
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required placeholder="Enter your email" maxlength="254">
+        </div>
+        <div class="form-group">
+            <label for="phone">Phone</label>
+            <input type="tel" id="phone" name="phone" required placeholder="Enter your phone number: +234XXXXXXXX" maxlength="15">
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="text" id="password" name="password" required placeholder="Enter a strong password" maxlength="128">
+        </div>
+        <div class="form-group">
+            <label for="address">Address</label>
+            <textarea id="address" name="address" rows="3" placeholder="Enter your address" maxlength="500"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="dob">Date of Birth</label>
+            <input type="date" id="dob" name="dob" placeholder="Enter your date of birth">
+        </div>
+        <div class="form-group">
+            <label for="occupation">Occupation</label>
+            <input type="text" id="occupation" name="occupation" required placeholder="Enter your occupation" maxlength="50">
+        </div>
+        <div class="form-group">
+            <label for="wedding">Date of Wedding</label>
+            <input type="date" id="wedding" name="wedding" placeholder="Enter your date of wedding">
+        </div>
+        <div class="form-group">
+            <label for="role">Role</label>
+            <select name="role" id="role">
+                <option value="worker">Worker</option>
+                <option value="member">Member</option>
+            </select>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById('biodataForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent the default form submission
+        const weddingValue = document.getElementById('wedding').value;
+        const formData = {
+            username: document.getElementById('username').value,
+            first_name: document.getElementById('first_name').value,
+            last_name: document.getElementById('last_name').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            password: document.getElementById('password').value,
+            address: document.getElementById('address').value,
+            dob: document.getElementById('dob').value,
+            occupation: document.getElementById('occupation').value,
+            wedding: weddingValue.trim() === '' ? null : weddingValue,
+            role: document.getElementById('role').value,
+        };
+        console.info('data', JSON.stringify(formData))
+        fetch('https://cmsserver.up.railway.app/register/', { // Replace with your API endpoint
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body:JSON.stringify(formData),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            alert(`Biodata submitted: ${data.message ?? 'Details already exist'}`);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            alert('An error occurred while submitting the form.');
+        });
+    });
+</script>
+
+</body>
+</html>
