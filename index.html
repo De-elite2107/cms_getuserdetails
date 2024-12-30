@@ -151,13 +151,14 @@
             wedding: weddingValue.trim() === '' ? null : weddingValue,
             role: document.getElementById('role').value,
         };
-        console.info('data', JSON.stringify(formData))
+        const json_formdata = JSON.stringify(formData);
+        console.info('data', json_formdata)
         fetch('https://cmsserver.up.railway.app/register/', { // Replace with your API endpoint
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(formData),
+            body: json_formdata,
         })
         .then(response => response.json())
         .then(data => {
