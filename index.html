@@ -155,9 +155,9 @@
         fetch('https://cmsserver.up.railway.app/register/', { // Replace with your API endpoint
             method: 'POST',
             headers: {
-                'Content-Type': 'multipart/form-data',
+                'Content-Type': 'application/json',
             },
-            body: formData,
+            body: JSON.stringify(formData),
         })
         .then(response => response.json())
         .then(data => {
