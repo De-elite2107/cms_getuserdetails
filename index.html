@@ -135,6 +135,18 @@
 </div>
 
 <script>
+    document.getElementById("phone").addEventListener('input', function() {
+        this.setCustomValidity('');
+        this.checkValidity();
+    });
+
+    document.getElementById("phone").addEventListener('invalid', function() {
+        if (this.value === '') {
+            this.setCustomValidity('Please enter your phone number.');
+        } else {
+            this.setCustomValidity('Enter phone number in this format: +234XXXXXXXXXX');
+        }
+    });
     document.getElementById('biodataForm').addEventListener('submit', function(event) {
         event.preventDefault(); // Prevent the default form submission
         const weddingValue = document.getElementById('wedding').value;
