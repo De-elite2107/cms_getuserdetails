@@ -76,6 +76,18 @@
             background-color: #0056b3; /* Darker blue on hover */
             transform: translateY(-2px); /* Lift effect */
         }
+        .message {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #333;
+        }
+        .message.success {
+            color: #28a745;
+        }
+        .message.error {
+            color: #dc3545;
+        }
     </style>
 </head>
 <body>
@@ -83,10 +95,6 @@
 <div class="form-container">
     <h2>Biodata Form</h2>
     <form id="biodataForm" enctype="multipart/form-data">
-        <div class="form-group">
-            <label for="username">Username</label>
-            <input type="text" id="username" name="username" required placeholder="Enter your username" maxlength="150">
-        </div>
         <div class="form-group">
             <label for="first_name">First name</label>
             <input type="text" id="first_name" name="first_name" required placeholder="Enter your first name" maxlength="150">
@@ -130,7 +138,8 @@
                 <option value="member">Member</option>
             </select>
         </div>
-        <button type="submit">Submit</button>
+        <button type="submit" id="submitButton">Submit</button>
+        <div id="message" class="message"></div>
     </form>
 </div>
 
@@ -147,11 +156,18 @@
             this.setCustomValidity('Enter phone number in this format: +234XXXXXXXXXX');
         }
     });
+
     document.getElementById('biodataForm').addEventListener('submit', function(event) {
         event.preventDefault(); // Prevent the default form submission
+        const submitButton = document.getElementById('submitButton');
+        const messageDiv = document.getElementById('message');
+
+        submitButton.textContent = 'Submitting...';
+        submitButton.disabled = true; // Disable button during submission
+        messageDiv.textContent = '';
+
         const weddingValue = document.getElementById('wedding').value;
         const formData = {
-            username: document.getElementById('username').value,
             first_name: document.getElementById('first_name').value,
             last_name: document.getElementById('last_name').value,
             email: document.getElementById('email').value,
@@ -163,8 +179,9 @@
             wedding: weddingValue.trim() === '' ? null : weddingValue,
             role: document.getElementById('role').value,
         };
+
         const json_formdata = JSON.stringify(formData);
-        console.info('data', json_formdata)
+
         fetch('https://cmsserver.up.railway.app/register/', { // Replace with your API endpoint
             method: 'POST',
             headers: {
@@ -174,12 +191,13 @@
         })
         .then(response => response.json())
         .then(data => {
-            console.log('Success:', data);
-            alert(`Biodata submitted: ${data.message ?? 'Details already exist'}`);
+            messageDiv.textContent = data.message ?? 'Details already exist';
+            messageDiv.className = 'message success';
         })
         .catch((error) => {
             console.error('Error:', error);
-            alert('An error occurred while submitting the form.');
+            messageDiv.textContent = 'An error occurred while submitting the form.'
+            messageDiv.className = 'message error';
         });
     });
 </script>
