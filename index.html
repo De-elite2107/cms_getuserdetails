@@ -203,14 +203,26 @@
         .then(response => response.json())
         .then(data => {
             console.log('Success:', data);
+             // Clear the message div
             messageDiv.textContent = '';
-            if (Array.isArray(data)) {
-                // If the response contains an array of errors, display them
-                const errorMessages = data.map(error => `<li>${error}</li>`).join('');
-                messageDiv.innerHTML = `<ul class="error-list">${errorMessages}</ul>`;
+            messageDiv.className = '';
+
+            if (data.username || data.email || data.phone) {
+                // If there are specific field errors
+                let errorMessages = '<ul class="error-list">';
+                for (const field in data) {
+                    if (Array.isArray(data[field])) {
+                        data[field].forEach(error => {
+                            errorMessages += `<li>${field}: ${error}</li>`;
+                        });
+                    }
+                }
+                errorMessages += '</ul>';
+
+                messageDiv.innerHTML = errorMessages;
                 messageDiv.className = 'message error';
             } else if (data.message) {
-                // If there's a success message, display it
+                // If there's a success message
                 messageDiv.textContent = data.message;
                 messageDiv.className = 'message success';
             } else {
@@ -220,12 +232,6 @@
             }
 
             // Reset the submit button text
-            submitButton.textContent = 'Submit';
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-            messageDiv.textContent = 'An error occurred while submitting the form.'
-            messageDiv.className = 'message error';
             submitButton.textContent = 'Submit';
         });
     });
