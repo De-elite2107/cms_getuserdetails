@@ -153,6 +153,11 @@
 </div>
 
 <script>
+    document.getElementById("dob").addEventListener("input", () => {
+        const today = new Date();
+        const maxDate = today.toISOString().split("T")[0];
+        this.setAttribute("max", maxDate);
+    });
     document.getElementById("phone").addEventListener('input', function() {
         this.setCustomValidity('');
         this.checkValidity();
