@@ -202,6 +202,7 @@
         })
         .then(response => response.json())
         .then(data => {
+            console.log('Success:', data);
             messageDiv.textContent = data.message ?? 'Details already exist';
             messageDiv.className = 'message success';
             submitButton.textContent = 'Submit';
