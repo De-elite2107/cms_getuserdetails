@@ -203,8 +203,23 @@
         .then(response => response.json())
         .then(data => {
             console.log('Success:', data);
-            messageDiv.textContent = data.message ?? 'Details already exist';
-            messageDiv.className = 'message success';
+            messageDiv.textContent = '';
+            if (Array.isArray(data)) {
+                // If the response contains an array of errors, display them
+                const errorMessages = data.map(error => `<li>${error}</li>`).join('');
+                messageDiv.innerHTML = `<ul class="error-list">${errorMessages}</ul>`;
+                messageDiv.className = 'message error';
+            } else if (data.message) {
+                // If there's a success message, display it
+                messageDiv.textContent = data.message;
+                messageDiv.className = 'message success';
+            } else {
+                // Fallback for unexpected response structure
+                messageDiv.textContent = 'An unexpected error occurred.';
+                messageDiv.className = 'message error';
+            }
+
+            // Reset the submit button text
             submitButton.textContent = 'Submit';
         })
         .catch((error) => {
